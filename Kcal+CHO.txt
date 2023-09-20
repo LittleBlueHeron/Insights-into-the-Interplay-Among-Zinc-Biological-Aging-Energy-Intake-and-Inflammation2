@@ -1,0 +1,788 @@
+> ############################################################################################################################################
+> ##################################################################################################################################
+> #### Kcal
+> 
+> ###Not signficant w/ or w/out ethnicity
+> model1aa <- svyglm(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")*  relevel(Kcal, ref = "Moderate Calorie Diet")+
++                      WBC + Choline +Folate +Ethnicity+BMI+Gender, design = d2, family = gaussian(link='log'))
+> 
+> summary(model1aa,df= degf(d61))
+
+Call:
+svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Kcal, ref = "Moderate Calorie Diet") + WBC + Choline + 
+    Folate + Ethnicity + BMI + Gender, design = d2, family = gaussian(link = "log"))
+
+Survey design:
+subset(nhc2, Age_R < 36)
+
+Coefficients:
+                                                                                                                        Estimate
+(Intercept)                                                                                                            1.4339175
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                               -0.6540772
+relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet                                                          0.0004581
+relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet                                                           0.0464301
+WBC                                                                                                                    0.0036702
+Choline                                                                                                                0.0023682
+Folate                                                                                                                -0.0002727
+EthnicityBlack                                                                                                        -0.2941692
+EthnicityMexican American                                                                                             -0.0586508
+EthnicityOther Hispanic                                                                                               -0.7231646
+EthnicityOther Race                                                                                                   -0.5111299
+EthnicityWhite                                                                                                        -0.6875824
+BMI                                                                                                                   -0.0142421
+GenderMale                                                                                                             0.3426184
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet -0.6083612
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet   0.5608360
+                                                                                                                      Std. Error
+(Intercept)                                                                                                            0.5367763
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                                0.3871875
+relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet                                                          0.2616508
+relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet                                                           0.4490464
+WBC                                                                                                                    0.0016132
+Choline                                                                                                                0.0006489
+Folate                                                                                                                 0.0004104
+EthnicityBlack                                                                                                         0.4026831
+EthnicityMexican American                                                                                              0.3680522
+EthnicityOther Hispanic                                                                                                0.3763824
+EthnicityOther Race                                                                                                    0.3033901
+EthnicityWhite                                                                                                         0.3470776
+BMI                                                                                                                    0.0202823
+GenderMale                                                                                                             0.1845281
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet  0.3319834
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet   0.5697650
+                                                                                                                      t value
+(Intercept)                                                                                                             2.671
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                                -1.689
+relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet                                                           0.002
+relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet                                                            0.103
+WBC                                                                                                                     2.275
+Choline                                                                                                                 3.650
+Folate                                                                                                                 -0.664
+EthnicityBlack                                                                                                         -0.731
+EthnicityMexican American                                                                                              -0.159
+EthnicityOther Hispanic                                                                                                -1.921
+EthnicityOther Race                                                                                                    -1.685
+EthnicityWhite                                                                                                         -1.981
+BMI                                                                                                                    -0.702
+GenderMale                                                                                                              1.857
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet  -1.833
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet    0.984
+                                                                                                                      Pr(>|t|)
+(Intercept)                                                                                                            0.01209
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                                0.10153
+relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet                                                          0.99861
+relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet                                                           0.91834
+WBC                                                                                                                    0.03021
+Choline                                                                                                                0.00099
+Folate                                                                                                                 0.51154
+EthnicityBlack                                                                                                         0.47074
+EthnicityMexican American                                                                                              0.87446
+EthnicityOther Hispanic                                                                                                0.06423
+EthnicityOther Race                                                                                                    0.10242
+EthnicityWhite                                                                                                         0.05682
+BMI                                                                                                                    0.48797
+GenderMale                                                                                                             0.07319
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet  0.07682
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet   0.33283
+                                                                                                                         
+(Intercept)                                                                                                           *  
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                                  
+relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet                                                            
+relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet                                                             
+WBC                                                                                                                   *  
+Choline                                                                                                               ***
+Folate                                                                                                                   
+EthnicityBlack                                                                                                           
+EthnicityMexican American                                                                                                
+EthnicityOther Hispanic                                                                                               .  
+EthnicityOther Race                                                                                                      
+EthnicityWhite                                                                                                        .  
+BMI                                                                                                                      
+GenderMale                                                                                                            .  
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet .  
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 39.55671)
+
+Number of Fisher Scoring iterations: 14
+
+> confint(model1aa,df=degf(d61))
+                                                                                                                              2.5 %
+(Intercept)                                                                                                            0.2898059142
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                               -1.4793477770
+relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet                                                         -0.5572373183
+relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet                                                          -0.9106896604
+WBC                                                                                                                    0.0002317297
+Choline                                                                                                                0.0009852147
+Folate                                                                                                                -0.0011474916
+EthnicityBlack                                                                                                        -1.1524678473
+EthnicityMexican American                                                                                             -0.8431355171
+EthnicityOther Hispanic                                                                                               -1.5254047549
+EthnicityOther Race                                                                                                   -1.1577905037
+EthnicityWhite                                                                                                        -1.4273608163
+BMI                                                                                                                   -0.0574728872
+GenderMale                                                                                                            -0.0506938457
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet -1.3159670048
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet  -0.6535893189
+                                                                                                                            97.5 %
+(Intercept)                                                                                                           2.5780290665
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                               0.1711934164
+relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet                                                         0.5581535524
+relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet                                                          1.0035498333
+WBC                                                                                                                   0.0071087107
+Choline                                                                                                               0.0037512098
+Folate                                                                                                                0.0006021495
+EthnicityBlack                                                                                                        0.5641293961
+EthnicityMexican American                                                                                             0.7258339701
+EthnicityOther Hispanic                                                                                               0.0790755013
+EthnicityOther Race                                                                                                   0.1355307786
+EthnicityWhite                                                                                                        0.0521959402
+BMI                                                                                                                   0.0289885933
+GenderMale                                                                                                            0.7359306466
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")High Calorie Diet 0.0992445424
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "Moderate Calorie Diet")Low Calorie Diet  1.7752612405
+> summ(model1aa, exp = TRUE,confint=TRUE, n.sd=2, digits= 6)
+MODEL INFO:
+Observations: 1211
+Dependent Variable: HSCRP
+Type: Analysis of complex survey design 
+ Family: gaussian 
+ Link function: log 
+
+MODEL FIT:
+Pseudo-R² (Cragg-Uhler) = 0.913522
+Pseudo-R² (McFadden) = 0.058268
+AIC = 8576.895823 
+
+-----------------------------------------------------------------------------------------
+                                  exp(Est.)       2.5%       97.5%      t val.          p
+------------------------------- ----------- ---------- ----------- ----------- ----------
+(Intercept)                        4.195101   1.465000   12.012883    2.671350   0.017431
+relevel(Zinc, ref =                0.519922   0.243424    1.110484   -1.689304   0.111833
+"Inadequate Intake")Adequate                                                             
+Intake                                                                                   
+relevel(Kcal, ref =                1.000458   0.599075    1.670769    0.001751   0.998626
+"Moderate Calorie Diet")High                                                             
+Calorie Diet                                                                             
+relevel(Kcal, ref =                1.047525   0.434446    2.525767    0.103397   0.919018
+"Moderate Calorie Diet")Low                                                              
+Calorie Diet                                                                             
+WBC                                1.003677   1.000509    1.006855    2.275094   0.038008
+Choline                            1.002371   1.001097    1.003647    3.649844   0.002371
+Folate                             0.999727   0.998923    1.000532   -0.664347   0.516551
+EthnicityBlack                     0.745150   0.338438    1.640621   -0.730523   0.476327
+EthnicityMexican American          0.943036   0.458397    1.940059   -0.159354   0.875515
+EthnicityOther Hispanic            0.485214   0.232036    1.014637   -1.921356   0.073897
+EthnicityOther Race                0.599817   0.330958    1.087089   -1.684728   0.112728
+EthnicityWhite                     0.502790   0.254656    0.992704   -1.981063   0.066224
+BMI                                0.985859   0.947437    1.025839   -0.702195   0.493311
+GenderMale                         1.408631   0.981130    2.022404    1.856728   0.083098
+relevel(Zinc, ref =                0.544242   0.283927    1.043222   -1.832505   0.086802
+"Inadequate Intake")Adequate                                                             
+Intake:relevel(Kcal, ref =                                                               
+"Moderate Calorie Diet")High                                                             
+Calorie Diet                                                                             
+relevel(Zinc, ref =                1.752137   0.573566    5.352452    0.984329   0.340566
+"Inadequate Intake")Adequate                                                             
+Intake:relevel(Kcal, ref =                                                               
+"Moderate Calorie Diet")Low                                                              
+Calorie Diet                                                                             
+-----------------------------------------------------------------------------------------
+> a1amd1pqr32 <-  tbl_regression(model1aa,intercept= FALSE,add_estimate_to_reference_rows = TRUE
++                             , exponentiate = TRUE)%>%  bold_p(t= 0.05) %>%
++   modify_caption("**Table 3: Analysis of the Coefficients of the Participants' Energy Intake 19-35** ")
+> a1amd1pqr32
+
+> ###Investigate terms (LRT)
+> regTermTest(model1aa,~ relevel(Zinc, ref = "Inadequate Intake"): relevel(Kcal, ref = "Moderate Calorie Diet"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake"):relevel(Kcal, ref = "Moderate Calorie Diet")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Kcal, ref = "Moderate Calorie Diet") + WBC + 
+    Choline + Folate + Ethnicity + BMI + Gender, design = d2, 
+    family = gaussian(link = "log"))
+Working 2logLR =  3.449249 p= 0.2026 
+(scale factors:  1.6 0.4 );  denominator df= 15
+> regTermTest(model1aa,~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Kcal, ref = "Moderate Calorie Diet"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake") relevel(Kcal, ref = "Moderate Calorie Diet") relevel(Zinc, ref = "Inadequate Intake"):relevel(Kcal, ref = "Moderate Calorie Diet")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Kcal, ref = "Moderate Calorie Diet") + WBC + 
+    Choline + Folate + Ethnicity + BMI + Gender, design = d2, 
+    family = gaussian(link = "log"))
+Working 2logLR =  9.033076 p= 0.17936 
+(scale factors:  2.1 1.6 0.87 0.29 0.17 );  denominator df= 15
+> 
+
+> ###Checking for Overfitting
+> # the caret library is loaded
+> set.seed(123)
+> 
+> subset13am <- subset(nhanes1, Age_R < 36 )
+> subset13ams4 <- na.omit(subset13am)
+> 
+> 
+> # Fit Generalized linear regression model using caret
+> modelk <- train(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")*Kcal+ Ethnicity+ Gender+
++                  WBC + Choline +Folate +BMI,
++                subset13ams4,
++                method = "glm",
++                trControl = trainControl(
++                  method = "cv",
++                  number = 10,
++                  verboseIter = T
++                ))
++ Fold01: parameter=none 
+- Fold01: parameter=none 
++ Fold02: parameter=none 
+- Fold02: parameter=none 
++ Fold03: parameter=none 
+- Fold03: parameter=none 
++ Fold04: parameter=none 
+- Fold04: parameter=none 
++ Fold05: parameter=none 
+- Fold05: parameter=none 
++ Fold06: parameter=none 
+- Fold06: parameter=none 
++ Fold07: parameter=none 
+- Fold07: parameter=none 
++ Fold08: parameter=none 
+- Fold08: parameter=none 
++ Fold09: parameter=none 
+- Fold09: parameter=none 
++ Fold10: parameter=none 
+- Fold10: parameter=none 
+Aggregating results
+Fitting final model on full training set
+> modelk
+Generalized Linear Model 
+
+1211 samples
+   8 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 1090, 1089, 1090, 1090, 1090, 1090, ... 
+Resampling results:
+
+  RMSE      Rsquared    MAE     
+  7.910883  0.02572476  3.489933
+
+> 
+> # Function for Root Mean Squared Error
+> RMSE <- function(error) { sqrt(mean(error^2)) }
+> RMSE(model1aa$residuals) 
+[1] 2.648834
+> ## Remove Ethnicity
+> model1aa <- svyglm(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Kcal, ref = "High Calorie Diet") +
++                      WBC + Choline +Folate +BMI+Gender, design = d2, family = gaussian(link='log'))
+> 
+> 
+> summary(model1aa,df= degf(d61))
+
+Call:
+svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Kcal, ref = "High Calorie Diet") + WBC + Choline + 
+    Folate + BMI + Gender, design = d2, family = gaussian(link = "log"))
+
+Survey design:
+subset(nhc2, Age_R < 36)
+
+Coefficients:
+                                                                                                                        Estimate Std. Error t value Pr(>|t|)   
+(Intercept)                                                                                                            1.5739744  0.5906221   2.665  0.01228 * 
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                               -0.9290583  0.3293488  -2.821  0.00841 **
+relevel(Kcal, ref = "High Calorie Diet")Low Calorie Diet                                                              -0.0126587  0.4354057  -0.029  0.97700   
+relevel(Kcal, ref = "High Calorie Diet")Moderate Calorie Diet                                                          0.0973039  0.3006236   0.324  0.74843   
+WBC                                                                                                                    0.0038174  0.0011912   3.205  0.00320 **
+Choline                                                                                                                0.0021568  0.0006277   3.436  0.00175 **
+Folate                                                                                                                -0.0004362  0.0003982  -1.095  0.28206   
+BMI                                                                                                                   -0.0266347  0.0133328  -1.998  0.05489 . 
+GenderMale                                                                                                             0.2316003  0.1597064   1.450  0.15739   
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "High Calorie Diet")Low Calorie Diet       0.8844206  0.6187132   1.429  0.16321   
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "High Calorie Diet")Moderate Calorie Diet  0.2792160  0.3342824   0.835  0.41017   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 40.32713)
+
+Number of Fisher Scoring iterations: 13
+
+> confint(model1aa,df=degf(d61))
+                                                                                                                              2.5 %        97.5 %
+(Intercept)                                                                                                            0.3419582578  2.8059904549
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                               -1.6160677601 -0.2420488514
+relevel(Kcal, ref = "High Calorie Diet")Low Calorie Diet                                                              -0.9208990606  0.8955817289
+relevel(Kcal, ref = "High Calorie Diet")Moderate Calorie Diet                                                         -0.5297860071  0.7243937326
+WBC                                                                                                                    0.0013326909  0.0063021752
+Choline                                                                                                                0.0008474613  0.0034660844
+Folate                                                                                                                -0.0012669111  0.0003944781
+BMI                                                                                                                   -0.0544464221  0.0011769601
+GenderMale                                                                                                            -0.1015414254  0.5647420083
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "High Calorie Diet")Low Calorie Diet      -0.4061924958  2.1750337449
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Kcal, ref = "High Calorie Diet")Moderate Calorie Diet -0.4180847884  0.9765168634
+> summ(model1aa, exp = TRUE,confint=TRUE, n.sd=2, digits= 6)
+MODEL INFO:
+Observations: 1211
+Dependent Variable: HSCRP
+Type: Analysis of complex survey design 
+ Family: gaussian 
+ Link function: log 
+
+MODEL FIT:
+Pseudo-R² (Cragg-Uhler) = 0.818998
+Pseudo-R² (McFadden) = 0.040687
+AIC = 8589.296339 
+
+------------------------------------------------------------------------------------------
+                                   exp(Est.)       2.5%       97.5%      t val.          p
+-------------------------------- ----------- ---------- ----------- ----------- ----------
+(Intercept)                         4.825790   1.516456   15.357015    2.664943   0.014874
+relevel(Zinc, ref =                 0.394925   0.207097    0.753108   -2.820895   0.010557
+"Inadequate Intake")Adequate                                                              
+Intake                                                                                    
+relevel(Kcal, ref = "High           0.987421   0.420615    2.318037   -0.029073   0.977094
+Calorie Diet")Low Calorie                                                                 
+Diet                                                                                      
+relevel(Kcal, ref = "High           1.102195   0.611459    1.986780    0.323673   0.749546
+Calorie Diet")Moderate Calorie                                                            
+Diet                                                                                      
+WBC                                 1.003825   1.001484    1.006171    3.204769   0.004448
+Choline                             1.002159   1.000927    1.003393    3.436118   0.002614
+Folate                              0.999564   0.998784    1.000344   -1.095387   0.286363
+BMI                                 0.973717   0.948601    0.999497   -1.997688   0.059535
+GenderMale                          1.260616   0.921808    1.723952    1.450163   0.162516
+relevel(Zinc, ref =                 2.421581   0.720194    8.142329    1.429452   0.168310
+"Inadequate Intake")Adequate                                                              
+Intake:relevel(Kcal, ref =                                                                
+"High Calorie Diet")Low                                                                   
+Calorie Diet                                                                              
+relevel(Zinc, ref =                 1.322093   0.686626    2.545679    0.835270   0.413433
+"Inadequate Intake")Adequate                                                              
+Intake:relevel(Kcal, ref =                                                                
+"High Calorie Diet")Moderate                                                              
+Calorie Diet                                                                              
+------------------------------------------------------------------------------------------
+
+Estimated dispersion parameter = 40.32713 
+> 
+> a1amd1pqr <-  tbl_regression(model1aa,intercept= FALSE,add_estimate_to_reference_rows = TRUE
++                              , exponentiate = TRUE)%>%  bold_p(t= 0.05) %>%
++   modify_caption("**Table S.3: Analysis of the Coefficients of the Participants' Energy Intake 19-35** ")
+> a1amd1pqr
+> 
+> ###Investigate terms
+> regTermTest(model1aa,~ relevel(Zinc, ref = "Inadequate Intake"): relevel(Kcal, ref = "High Calorie Diet"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake"):relevel(Kcal, ref = "High Calorie Diet")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Kcal, ref = "High Calorie Diet") + WBC + Choline + 
+    Folate + BMI + Gender, design = d2, family = gaussian(link = "log"))
+Working 2logLR =  2.084899 p= 0.33522 
+(scale factors:  1.6 0.4 );  denominator df= 20
+> regTermTest(model1aa,~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Kcal, ref = "High Calorie Diet"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake") relevel(Kcal, ref = "High Calorie Diet") relevel(Zinc, ref = "Inadequate Intake"):relevel(Kcal, ref = "High Calorie Diet")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Kcal, ref = "High Calorie Diet") + WBC + Choline + 
+    Folate + BMI + Gender, design = d2, family = gaussian(link = "log"))
+Working 2logLR =  8.117526 p= 0.20496 
+(scale factors:  1.7 1.6 1.1 0.36 0.22 );  denominator df= 20
+ ###Checking for Overfitting
+> # the caret library is loaded
+> set.seed(123)
+> 
+> subset13am <- subset(nhanes1, Age_R < 36 )
+> subset13ams4 <- na.omit(subset13am)
+> 
+> 
+> # Fit Generalized linear regression model using caret
+> modelk <- train(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")*Kcal+ Gender+
++                   WBC + Choline +Folate +BMI,
++                 subset13ams4,
++                 method = "glm",
++                 trControl = trainControl(
++                   method = "cv",
++                   number = 10,
++                   verboseIter = T
++                 ))
++ Fold01: parameter=none 
+- Fold01: parameter=none 
++ Fold02: parameter=none 
+- Fold02: parameter=none 
++ Fold03: parameter=none 
+- Fold03: parameter=none 
++ Fold04: parameter=none 
+- Fold04: parameter=none 
++ Fold05: parameter=none 
+- Fold05: parameter=none 
++ Fold06: parameter=none 
+- Fold06: parameter=none 
++ Fold07: parameter=none 
+- Fold07: parameter=none 
++ Fold08: parameter=none 
+- Fold08: parameter=none 
++ Fold09: parameter=none 
+- Fold09: parameter=none 
++ Fold10: parameter=none 
+- Fold10: parameter=none 
+Aggregating results
+Fitting final model on full training set
+> modelk
+Generalized Linear Model 
+
+1211 samples
+   7 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 1090, 1089, 1090, 1090, 1090, 1090, ... 
+Resampling results:
+
+  RMSE      Rsquared    MAE     
+  7.913504  0.02369755  3.472705
+
+> 
+> # Function for Root Mean Squared Error
+> RMSE <- function(error) { sqrt(mean(error^2)) }
+> RMSE(model1aa$residuals) 
+[1] 2.187264
+
+> #####################################################################################################################
+> #### CHO
+> ### Overfitted
+> 
+> model1aaa <- svyglm(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Carbohydrate, ref = "Low Intake") +  
++                      WBC + Choline +Folate +BMI+Gender+Ethnicity , design = d2, family = gaussian(link='log'))
+Warning message:
+glm.fit: algorithm did not converge 
+> 
+> summary(model1aaa,df= degf(d61))
+
+Call:
+svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Carbohydrate, ref = "Low Intake") + WBC + Choline + 
+    Folate + BMI + Gender + Ethnicity, design = d2, family = gaussian(link = "log"))
+
+Survey design:
+subset(nhc2, Age_R < 36)
+
+Coefficients:
+                                                                                                                   Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                                                                                                       1.2155577  0.6208782   1.958 0.059611 .  
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                           0.2825996  0.4962260   0.569 0.573258    
+relevel(Carbohydrate, ref = "Low Intake")High Intake                                                              0.5741759  0.2399783   2.393 0.023193 *  
+relevel(Carbohydrate, ref = "Low Intake")Moderate Intake                                                          1.2020320  0.6267964   1.918 0.064708 .  
+WBC                                                                                                               0.0046889  0.0013580   3.453 0.001673 ** 
+Choline                                                                                                           0.0030391  0.0007849   3.872 0.000543 ***
+Folate                                                                                                           -0.0024962  0.0009068  -2.753 0.009929 ** 
+BMI                                                                                                               0.0019429  0.0217175   0.089 0.929309    
+GenderMale                                                                                                        0.6170093  0.2757280   2.238 0.032815 *  
+EthnicityBlack                                                                                                   -1.0482287  0.6349640  -1.651 0.109202    
+EthnicityMexican American                                                                                        -0.9043328  0.6322019  -1.430 0.162922    
+EthnicityOther Hispanic                                                                                          -1.1186228  0.3912717  -2.859 0.007660 ** 
+EthnicityOther Race                                                                                              -0.9533319  0.4760324  -2.003 0.054323 .  
+EthnicityWhite                                                                                                   -1.5241523  0.4766924  -3.197 0.003261 ** 
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Carbohydrate, ref = "Low Intake")High Intake     -1.6997373  0.5623586  -3.023 0.005093 ** 
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Carbohydrate, ref = "Low Intake")Moderate Intake -2.0040817  0.8349969  -2.400 0.022801 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 38.04174)
+
+Number of Fisher Scoring iterations: 25
+
+> confint(model1aaa,df=degf(d61))
+                                                                                                                        2.5 %        97.5 %
+(Intercept)                                                                                                      -0.107812768  2.5389281982
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                          -0.775081095  1.3402803141
+relevel(Carbohydrate, ref = "Low Intake")High Intake                                                              0.062674266  1.0856775037
+relevel(Carbohydrate, ref = "Low Intake")Moderate Intake                                                         -0.133952875  2.5380168624
+WBC                                                                                                               0.001794480  0.0075833759
+Choline                                                                                                           0.001366034  0.0047121819
+Folate                                                                                                           -0.004428948 -0.0005635201
+BMI                                                                                                              -0.044346882  0.0482326644
+GenderMale                                                                                                        0.029308917  1.2047096642
+EthnicityBlack                                                                                                   -2.401622460  0.3051649941
+EthnicityMexican American                                                                                        -2.251839289  0.4431737706
+EthnicityOther Hispanic                                                                                          -1.952598552 -0.2846469751
+EthnicityOther Race                                                                                              -1.967971058  0.0613071701
+EthnicityWhite                                                                                                   -2.540198165 -0.5081065238
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Carbohydrate, ref = "Low Intake")High Intake     -2.898376231 -0.5010984209
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Carbohydrate, ref = "Low Intake")Moderate Intake -3.783835609 -0.2243278740
+> summ(model1aa, exp = TRUE,confint=TRUE, n.sd=2, digits= 6)
+MODEL INFO:
+Observations: 1211
+Dependent Variable: HSCRP
+Type: Analysis of complex survey design 
+ Family: gaussian 
+ Link function: log 
+
+MODEL FIT:
+Pseudo-R² (Cragg-Uhler) = 0.818998
+Pseudo-R² (McFadden) = 0.040687
+AIC = 8589.296339 
+
+------------------------------------------------------------------------------------------
+                                   exp(Est.)       2.5%       97.5%      t val.          p
+-------------------------------- ----------- ---------- ----------- ----------- ----------
+(Intercept)                         4.825790   1.516456   15.357015    2.664943   0.014874
+relevel(Zinc, ref =                 0.394925   0.207097    0.753108   -2.820895   0.010557
+"Inadequate Intake")Adequate                                                              
+Intake                                                                                    
+relevel(Kcal, ref = "High           0.987421   0.420615    2.318037   -0.029073   0.977094
+Calorie Diet")Low Calorie                                                                 
+Diet                                                                                      
+relevel(Kcal, ref = "High           1.102195   0.611459    1.986780    0.323673   0.749546
+Calorie Diet")Moderate Calorie                                                            
+Diet                                                                                      
+WBC                                 1.003825   1.001484    1.006171    3.204769   0.004448
+Choline                             1.002159   1.000927    1.003393    3.436118   0.002614
+Folate                              0.999564   0.998784    1.000344   -1.095387   0.286363
+BMI                                 0.973717   0.948601    0.999497   -1.997688   0.059535
+GenderMale                          1.260616   0.921808    1.723952    1.450163   0.162516
+relevel(Zinc, ref =                 2.421581   0.720194    8.142329    1.429452   0.168310
+"Inadequate Intake")Adequate                                                              
+Intake:relevel(Kcal, ref =                                                                
+"High Calorie Diet")Low                                                                   
+Calorie Diet                                                                              
+relevel(Zinc, ref =                 1.322093   0.686626    2.545679    0.835270   0.413433
+"Inadequate Intake")Adequate                                                              
+Intake:relevel(Kcal, ref =                                                                
+"High Calorie Diet")Moderate                                                              
+Calorie Diet                                                                              
+------------------------------------------------------------------------------------------
+
+Estimated dispersion parameter = 40.32713 
+> ###Checking for Overfitting
+> # the caret library is loaded
+> set.seed(123)
+> 
+> subset13am <- subset(nhanes1, Age_R <36 )
+> subset13ams <- na.omit(subset13am)
+> 
+> 
+> # Fit Generalized linear regression model using caret
+> modelp <- train( HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* Carbohydrate + Ethnicity+
++                   WBC + Choline +Folate +BMI+ Gender,
++                 subset13ams,
++                 method = "glm",
++                 trControl = trainControl(
++                   method = "cv",
++                   number = 10,
++                   verboseIter = T
++                 ))
++ Fold01: parameter=none 
+- Fold01: parameter=none 
++ Fold02: parameter=none 
+- Fold02: parameter=none 
++ Fold03: parameter=none 
+- Fold03: parameter=none 
++ Fold04: parameter=none 
+- Fold04: parameter=none 
++ Fold05: parameter=none 
+- Fold05: parameter=none 
++ Fold06: parameter=none 
+- Fold06: parameter=none 
++ Fold07: parameter=none 
+- Fold07: parameter=none 
++ Fold08: parameter=none 
+- Fold08: parameter=none 
++ Fold09: parameter=none 
+- Fold09: parameter=none 
++ Fold10: parameter=none 
+- Fold10: parameter=none 
+Aggregating results
+Fitting final model on full training set
+> modelp
+Generalized Linear Model 
+
+1211 samples
+   8 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 1090, 1089, 1090, 1090, 1090, 1090, ... 
+Resampling results:
+
+  RMSE      Rsquared    MAE     
+  7.898697  0.02448083  3.472453
+
+> 
+> # Function for Root Mean Squared Error
+> RMSE <- function(error) { sqrt(mean(error^2)) }
+> RMSE(model1aaa$residuals)
+[1] 70.27824
+
+> ### Remove Ethnicity
+> model1aaa <- svyglm(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Carbohydrate, ref = "Low Intake") +  
++                       WBC + Choline +BMI+Gender , design = d2, family = gaussian(link='log'))
+> 
+> summary(model1aaa,df= degf(d61))
+
+Call:
+svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Carbohydrate, ref = "Low Intake") + WBC + Choline + 
+    BMI + Gender, design = d2, family = gaussian(link = "log"))
+
+Survey design:
+subset(nhc2, Age_R < 36)
+
+Coefficients:
+                                                                                                                   Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                                                                                                       1.1688149  0.3280101   3.563 0.001248 ** 
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                           0.1196115  0.3490529   0.343 0.734233    
+relevel(Carbohydrate, ref = "Low Intake")High Intake                                                              0.1594333  0.1748970   0.912 0.369255    
+relevel(Carbohydrate, ref = "Low Intake")Moderate Intake                                                          0.4087280  0.4083406   1.001 0.324857    
+WBC                                                                                                               0.0039447  0.0009361   4.214 0.000211 ***
+Choline                                                                                                           0.0016000  0.0004028   3.972 0.000412 ***
+BMI                                                                                                              -0.0203612  0.0103929  -1.959 0.059447 .  
+GenderMale                                                                                                        0.3188620  0.1659511   1.921 0.064224 .  
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Carbohydrate, ref = "Low Intake")High Intake     -0.9343058  0.3330196  -2.806 0.008734 ** 
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Carbohydrate, ref = "Low Intake")Moderate Intake -0.9444827  0.5083167  -1.858 0.072999 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 40.30923)
+
+Number of Fisher Scoring iterations: 10
+
+> confint(model1aaa,df=degf(d61))
+                                                                                                                         2.5 %       97.5 %
+(Intercept)                                                                                                       0.4866805716  1.850949271
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                                          -0.6062836828  0.845506658
+relevel(Carbohydrate, ref = "Low Intake")High Intake                                                             -0.2042848199  0.523151420
+relevel(Carbohydrate, ref = "Low Intake")Moderate Intake                                                         -0.4404628159  1.257918742
+WBC                                                                                                               0.0019979436  0.005891409
+Choline                                                                                                           0.0007623481  0.002437715
+BMI                                                                                                              -0.0419743816  0.001252012
+GenderMale                                                                                                       -0.0262522094  0.663976308
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Carbohydrate, ref = "Low Intake")High Intake     -1.6268580269 -0.241753501
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Carbohydrate, ref = "Low Intake")Moderate Intake -2.0015851717  0.112619747
+> summ(model1aa, exp = TRUE,confint=TRUE, n.sd=2, digits= 6)
+MODEL INFO:
+Observations: 1211
+Dependent Variable: HSCRP
+Type: Analysis of complex survey design 
+ Family: gaussian 
+ Link function: log 
+
+MODEL FIT:
+Pseudo-R² (Cragg-Uhler) = 0.818998
+Pseudo-R² (McFadden) = 0.040687
+AIC = 8589.296339 
+
+------------------------------------------------------------------------------------------
+                                   exp(Est.)       2.5%       97.5%      t val.          p
+-------------------------------- ----------- ---------- ----------- ----------- ----------
+(Intercept)                         4.825790   1.516456   15.357015    2.664943   0.014874
+relevel(Zinc, ref =                 0.394925   0.207097    0.753108   -2.820895   0.010557
+"Inadequate Intake")Adequate                                                              
+Intake                                                                                    
+relevel(Kcal, ref = "High           0.987421   0.420615    2.318037   -0.029073   0.977094
+Calorie Diet")Low Calorie                                                                 
+Diet                                                                                      
+relevel(Kcal, ref = "High           1.102195   0.611459    1.986780    0.323673   0.749546
+Calorie Diet")Moderate Calorie                                                            
+Diet                                                                                      
+WBC                                 1.003825   1.001484    1.006171    3.204769   0.004448
+Choline                             1.002159   1.000927    1.003393    3.436118   0.002614
+Folate                              0.999564   0.998784    1.000344   -1.095387   0.286363
+BMI                                 0.973717   0.948601    0.999497   -1.997688   0.059535
+GenderMale                          1.260616   0.921808    1.723952    1.450163   0.162516
+relevel(Zinc, ref =                 2.421581   0.720194    8.142329    1.429452   0.168310
+"Inadequate Intake")Adequate                                                              
+Intake:relevel(Kcal, ref =                                                                
+"High Calorie Diet")Low                                                                   
+Calorie Diet                                                                              
+relevel(Zinc, ref =                 1.322093   0.686626    2.545679    0.835270   0.413433
+"Inadequate Intake")Adequate                                                              
+Intake:relevel(Kcal, ref =                                                                
+"High Calorie Diet")Moderate                                                              
+Calorie Diet                                                                              
+------------------------------------------------------------------------------------------
+
+Estimated dispersion parameter = 40.32713 
+> 
+> a1amd1pq <-  tbl_regression(model1aaa,intercept= FALSE,add_estimate_to_reference_rows = TRUE
++                             , exponentiate = TRUE)%>%  bold_p(t= 0.05) %>%
++   modify_caption("**Table 4: Analysis of the Coefficients of Participants Carbohydrate Intake (19-35)** ")
+> a1amd1pq
+> ###Investigate terms ( LRT not significant)
+> regTermTest(model1aaa,~ relevel(Zinc, ref = "Inadequate Intake"): relevel(Carbohydrate, ref = "Low Intake"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake"):relevel(Carbohydrate, ref = "Low Intake")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Carbohydrate, ref = "Low Intake") + WBC + Choline + 
+    BMI + Gender, design = d2, family = gaussian(link = "log"))
+Working 2logLR =  6.745205 p= 0.054141 
+(scale factors:  1.2 0.79 );  denominator df= 21
+> regTermTest(model1aaa,~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Carbohydrate, ref = "Low Intake"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake") relevel(Carbohydrate, ref = "Low Intake") relevel(Zinc, ref = "Inadequate Intake"):relevel(Carbohydrate, ref = "Low Intake")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Carbohydrate, ref = "Low Intake") + WBC + Choline + 
+    BMI + Gender, design = d2, family = gaussian(link = "log"))
+Working 2logLR =  12.11546 p= 0.089525 
+(scale factors:  2.5 1.4 0.79 0.22 0.15 );  denominator df= 21
+> regTermTest(mod
++ ###Checking for Overfitting
++ # the caret library is loaded
++ set.seed(123)
+> 
+> subset13am <- subset(nhanes1, Age_R <36 )
+> subset13ams <- na.omit(subset13am)
+> 
+> 
+> # Fit Generalized linear regression model using caret
+> modelpk <- train( HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* Carbohydrate + 
++                    WBC + Choline +Folate +BMI+ Gender,
++                  subset13ams,
++                  method = "glm",
++                  trControl = trainControl(
++                    method = "cv",
++                    number = 10,
++                    verboseIter = T
++                  ))
++ Fold01: parameter=none 
+- Fold01: parameter=none 
++ Fold02: parameter=none 
+- Fold02: parameter=none 
++ Fold03: parameter=none 
+- Fold03: parameter=none 
++ Fold04: parameter=none 
+- Fold04: parameter=none 
++ Fold05: parameter=none 
+- Fold05: parameter=none 
++ Fold06: parameter=none 
+- Fold06: parameter=none 
++ Fold07: parameter=none 
+- Fold07: parameter=none 
++ Fold08: parameter=none 
+- Fold08: parameter=none 
++ Fold09: parameter=none 
+- Fold09: parameter=none 
++ Fold10: parameter=none 
+- Fold10: parameter=none 
+Aggregating results
+Fitting final model on full training set
+> modelpk
+Generalized Linear Model 
+
+1211 samples
+   7 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 1089, 1091, 1090, 1090, 1089, 1090, ... 
+Resampling results:
+
+  RMSE      Rsquared    MAE     
+  8.007567  0.03906183  3.431521
+
+> ## plots ## No difference, not biologically relevant
+> 
+> 
+> model1aaa <- svyglm(HSCRP ~  Carbohydrate *relevel(Zinc, ref = "Inadequate Intake") +
++                      WBC + Choline +Folate +BMI+ Gender , design = d61, family = gaussian(link='log'))
+> 
+> 
+> cat_plot(model1aaa, pred = Carbohydrate, modx = Zinc, main.title = "Figure 2:Two-Way Interaction Effect Between CHO & Dietary Zinc (Young Adult)",
++          x.label =  "Carbohydrate", interval = TRUE)
