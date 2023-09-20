@@ -1,0 +1,523 @@
+##################################################################################################################    
+> ### Part 2    
+> ###Serum  Zn Data
+> ###################################################################################################################
+> ### Bring in data and set up  design
+> Dsdata <- FD21 %>% mutate_if(is.character,as.factor)
+> str(Dsdata)
+tibble [340 × 11] (S3: tbl_df/tbl/data.frame)
+ $ SEQN       : num [1:340] 83741 83742 83752 83760 83785 ...
+ $ Fasting    : num [1:340] 9 3 1 2 5 6 4 2 12 8 ...
+ $ Zinc       : num [1:340] 80.6 80.7 87.9 139.1 90.9 ...
+ $ HSCRP      : num [1:340] 1.3 3 0.9 0.08 3.1 1.1 0.08 0.08 0.5 0.8 ...
+ $ Age        : num [1:340] 22 32 30 19 27 22 27 20 24 20 ...
+ $ SDMVPSU    : num [1:340] 2 1 1 2 2 2 2 1 1 2 ...
+ $ SDMVSTRA   : num [1:340] 128 125 124 121 119 121 126 129 130 126 ...
+ $ WTSA2YR    : num [1:340] 31201 56483 38172 175767 65161 ...
+ $ Gender     : Factor w/ 2 levels "Female","Male": 2 1 1 1 1 2 2 1 2 1 ...
+ $ Ethnicity_R: num [1:340] 4 1 2 1 4 2 4 4 3 4 ...
+ $ WBC        : num [1:340] 3.5 8.3 9.8 7.2 8.5 5.7 5.3 5.8 7.2 5.8 ...
+> nhc12 <- svydesign(id=~SDMVPSU, weights=~WTSA2YR, strata=~SDMVSTRA, nest=TRUE, survey.lonely.psu = "adjust", data= Dsdata)
+> summary(nhc12)
+Stratified 1 - level Cluster Sampling design (with replacement)
+With (30) clusters.
+svydesign(id = ~SDMVPSU, weights = ~WTSA2YR, strata = ~SDMVSTRA, 
+    nest = TRUE, survey.lonely.psu = "adjust", data = Dsdata)
+Probabilities:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+1.411e-06 8.263e-06 1.440e-05 1.611e-05 2.085e-05 5.378e-05 
+Stratum Sizes: 
+           119 120 121 122 123 124 125 126 127 128 129 130 131 132 133
+obs         19  35  33  21  13  25  21  33  14  15  11  27  20  30  23
+design.PSU   2   2   2   2   2   2   2   2   2   2   2   2   2   2   2
+actual.PSU   2   2   2   2   2   2   2   2   2   2   2   2   2   2   2
+Data variables:
+ [1] "SEQN"        "Fasting"     "Zinc"        "HSCRP"       "Age"         "SDMVPSU"     "SDMVSTRA"    "WTSA2YR"    
+ [9] "Gender"      "Ethnicity_R" "WBC"        
+> str(nhc12) 
+List of 9
+ $ cluster   :'data.frame':	340 obs. of  1 variable:
+  ..$ SDMVPSU: Factor w/ 30 levels "119.1","119.2",..: 20 13 11 6 2 6 16 21 23 16 ...
+  ..- attr(*, "terms")=Classes 'terms', 'formula'  language ~SDMVPSU
+  .. .. ..- attr(*, "variables")= language list(SDMVPSU)
+  .. .. ..- attr(*, "factors")= int [1, 1] 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr "SDMVPSU"
+  .. .. .. .. ..$ : chr "SDMVPSU"
+  .. .. ..- attr(*, "term.labels")= chr "SDMVPSU"
+  .. .. ..- attr(*, "order")= int 1
+  .. .. ..- attr(*, "intercept")= int 1
+  .. .. ..- attr(*, "response")= int 0
+  .. .. ..- attr(*, ".Environment")=<environment: R_GlobalEnv> 
+  .. .. ..- attr(*, "predvars")= language list(SDMVPSU)
+  .. .. ..- attr(*, "dataClasses")= Named chr "numeric"
+  .. .. .. ..- attr(*, "names")= chr "SDMVPSU"
+ $ strata    :'data.frame':	340 obs. of  1 variable:
+  ..$ SDMVSTRA: num [1:340] 128 125 124 121 119 121 126 129 130 126 ...
+  ..- attr(*, "terms")=Classes 'terms', 'formula'  language ~SDMVSTRA
+  .. .. ..- attr(*, "variables")= language list(SDMVSTRA)
+  .. .. ..- attr(*, "factors")= int [1, 1] 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr "SDMVSTRA"
+  .. .. .. .. ..$ : chr "SDMVSTRA"
+  .. .. ..- attr(*, "term.labels")= chr "SDMVSTRA"
+  .. .. ..- attr(*, "order")= int 1
+  .. .. ..- attr(*, "intercept")= int 1
+  .. .. ..- attr(*, "response")= int 0
+  .. .. ..- attr(*, ".Environment")=<environment: R_GlobalEnv> 
+  .. .. ..- attr(*, "predvars")= language list(SDMVSTRA)
+  .. .. ..- attr(*, "dataClasses")= Named chr "numeric"
+  .. .. .. ..- attr(*, "names")= chr "SDMVSTRA"
+ $ has.strata: logi TRUE
+ $ prob      : Named num [1:340] 3.21e-05 1.77e-05 2.62e-05 5.69e-06 1.53e-05 ...
+  ..- attr(*, "names")= chr [1:340] "1" "2" "3" "4" ...
+ $ allprob   :'data.frame':	340 obs. of  1 variable:
+  ..$ WTSA2YR: num [1:340] 3.21e-05 1.77e-05 2.62e-05 5.69e-06 1.53e-05 ...
+ $ call      : language svydesign(id = ~SDMVPSU, weights = ~WTSA2YR, strata = ~SDMVSTRA, nest = TRUE, survey.lonely.psu = "adjust", data = Dsdata)
+ $ variables :'data.frame':	340 obs. of  11 variables:
+  ..$ SEQN       : num [1:340] 83741 83742 83752 83760 83785 ...
+  ..$ Fasting    : num [1:340] 9 3 1 2 5 6 4 2 12 8 ...
+  ..$ Zinc       : num [1:340] 80.6 80.7 87.9 139.1 90.9 ...
+  ..$ HSCRP      : num [1:340] 1.3 3 0.9 0.08 3.1 1.1 0.08 0.08 0.5 0.8 ...
+  ..$ Age        : num [1:340] 22 32 30 19 27 22 27 20 24 20 ...
+  ..$ SDMVPSU    : num [1:340] 2 1 1 2 2 2 2 1 1 2 ...
+  ..$ SDMVSTRA   : num [1:340] 128 125 124 121 119 121 126 129 130 126 ...
+  ..$ WTSA2YR    : num [1:340] 31201 56483 38172 175767 65161 ...
+  ..$ Gender     : Factor w/ 2 levels "Female","Male": 2 1 1 1 1 2 2 1 2 1 ...
+  ..$ Ethnicity_R: num [1:340] 4 1 2 1 4 2 4 4 3 4 ...
+  ..$ WBC        : num [1:340] 3.5 8.3 9.8 7.2 8.5 5.7 5.3 5.8 7.2 5.8 ...
+ $ fpc       :List of 2
+  ..$ popsize : NULL
+  ..$ sampsize: int [1:340, 1] 2 2 2 2 2 2 2 2 2 2 ...
+  ..- attr(*, "class")= chr "survey_fpc"
+ $ pps       : logi FALSE
+ - attr(*, "class")= chr [1:2] "survey.design2" "survey.design"
+> 
+> ### Equations
+> mo2z <- svyglm(  HSCRP ~ Zinc + Fasting + WBC  , design= nhc12, family = gaussian(link='log'))
+> mo2z
+Stratified 1 - level Cluster Sampling design (with replacement)
+With (30) clusters.
+svydesign(id = ~SDMVPSU, weights = ~WTSA2YR, strata = ~SDMVSTRA, 
+    nest = TRUE, survey.lonely.psu = "adjust", data = Dsdata)
+
+Call:  svyglm(formula = HSCRP ~ Zinc + Fasting + WBC, design = nhc12, 
+    family = gaussian(link = "log"))
+
+Coefficients:
+(Intercept)         Zinc      Fasting          WBC  
+   -4.24725      0.01422      0.01021      0.43027  
+
+Degrees of Freedom: 339 Total (i.e. Null);  12 Residual
+Null Deviance:	    15140 
+Residual Deviance: 10780 	AIC: 2263
+> ###Summs
+> summary(mo2z,df= degf(nhc12))
+
+Call:
+svyglm(formula = HSCRP ~ Zinc + Fasting + WBC, design = nhc12, 
+    family = gaussian(link = "log"))
+
+Survey design:
+svydesign(id = ~SDMVPSU, weights = ~WTSA2YR, strata = ~SDMVSTRA, 
+    nest = TRUE, survey.lonely.psu = "adjust", data = Dsdata)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -4.24725    1.58138  -2.686   0.0169 *  
+Zinc         0.01422    0.01186   1.199   0.2490    
+Fasting      0.01021    0.04502   0.227   0.8236    
+WBC          0.43027    0.05458   7.883 1.03e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 30.51111)
+
+Number of Fisher Scoring iterations: 19
+
+> confint(mo2z,df=degf(nhc12))
+                  2.5 %      97.5 %
+(Intercept) -7.69277177 -0.80172460
+Zinc        -0.01161401  0.04005808
+Fasting     -0.08788506  0.10830756
+WBC          0.31134223  0.54919972
+> 
+> ### Investigate terms ( LRT)
+> regTermTest(mo2z,~  Zinc + Fasting + WBC , method = "LRT")
+Working (Rao-Scott+F) LRT for Zinc Fasting WBC
+ in svyglm(formula = HSCRP ~ Zinc + Fasting + WBC, design = nhc12, 
+    family = gaussian(link = "log"))
+Working 2logLR =  41.50495 p= 0.00070988 
+(scale factors:  1.8 0.81 0.43 );  denominator df= 12
+> regTermTest(mo2z, ~Zinc, method = "LRT")
+Working (Rao-Scott+F) LRT for Zinc
+ in svyglm(formula = HSCRP ~ Zinc + Fasting + WBC, design = nhc12, 
+    family = gaussian(link = "log"))
+Working 2logLR =  1.013914 p= 0.33586 
+df=1;  denominator df= 12
+> regTermTest(mo2z, ~Fasting, method = "LRT")
+Working (Rao-Scott+F) LRT for Fasting
+ in svyglm(formula = HSCRP ~ Zinc + Fasting + WBC, design = nhc12, 
+    family = gaussian(link = "log"))
+Working 2logLR =  0.04143639 p= 0.83554 
+df=1;  denominator df= 12
+> regTermTest(mo2z, ~WBC, method = "LRT")
+Working (Rao-Scott+F) LRT for WBC
+ in svyglm(formula = HSCRP ~ Zinc + Fasting + WBC, design = nhc12, 
+    family = gaussian(link = "log"))
+Working 2logLR =  47.27531 p= 1.8844e-05 
+df=1;  denominator df= 12
+> 
+> 
+> z12 <-  tbl_regression(mo2z,intercept= FALSE,add_estimate_to_reference_rows = TRUE
++                       , exponentiate = TRUE)%>% 
++   modify_caption("**Table 4: Analysis of the Coefficients of Participants** ")
+> z12
+> 
+> ### Zinc
+> svyquantile(~Zinc, design = nhc12, na = TRUE, c( 0.20, .25, .33,.5,.75, .90),ci=TRUE)
+$Zinc
+     quantile ci.2.5 ci.97.5       se
+0.2      69.3   65.8    73.9 1.900115
+0.25     72.8   68.6    75.3 1.571700
+0.33     75.6   72.8    78.5 1.337118
+0.5      81.7   79.9    84.5 1.079078
+0.75     90.9   89.6    94.0 1.032161
+0.9     101.7   98.5   106.5 1.876657
+
+attr(,"hasci")
+[1] TRUE
+attr(,"class")
+[1] "newsvyquantile"
+> 
+> ####Fasting
+> svyquantile(~Fasting, design = nhc12, na = TRUE, c(0,0.20,.25,.5,.75, .90, 1.0),ci=TRUE)
+$Fasting
+     quantile ci.2.5 ci.97.5        se
+0           0      0       1 0.2345821
+0.2         1      1       2 0.2345821
+0.25        1      1       2 0.2345821
+0.5         4      3      10 1.6420750
+0.75       11     10      13 0.7037464
+0.9        13     13      15 0.4691643
+1          21     21      21 0.0000000
+
+attr(,"hasci")
+[1] TRUE
+attr(,"class")
+[1] "newsvyquantile"
+> 
+> ####HSCRP
+> svyquantile(~ HSCRP, design = nhc12, na = TRUE, c(00.20,.25,.5,.75, .90),ci=TRUE)
+$HSCRP
+     quantile ci.2.5 ci.97.5         se
+0.2       0.3    0.2     0.5 0.07037464
+0.25      0.4    0.3     0.6 0.07037464
+0.5       1.1    0.9     1.7 0.18766571
+0.75      3.3    2.4     6.0 0.84449571
+0.9       9.7    7.0    12.9 1.38403464
+
+attr(,"hasci")
+[1] TRUE
+attr(,"class")
+[1] "newsvyquantile"
+> 
+> ###Survey Mean
+> ##WBC
+> svymean(~WBC,nhc12)
+     mean     SE
+WBC 7.519 0.1589
+> 
+> ### Gender
+> svymean(~Gender,nhc12)
+                mean     SE
+GenderFemale 0.55771 0.0389
+GenderMale   0.44229 0.0389
+> 
+> 
+> 
+> ### Train data
+> set.seed(123)
+> subset13am <- subset(Dsdata, Age < 36 )
+> subset13ams4 <- na.omit(subset13am)
+> 
+> 
+> # Fit Generalized linear regression model using caret
+> modely1 <- train(HSCRP ~ Zinc + Fasting + WBC  ,
++                 nhc12,
++                 method = "glm",
++                 trControl = trainControl(
++                   method = "cv",
++                   number = 10,
++                   verboseIter = T ))
+Error in as.data.frame.default(data) : 
+  cannot coerce class ‘c("survey.design2", "survey.design")’ to a data.frame
+> ### Train data
+> set.seed(123)
+> subset13am <- subset(Dsdata, Age < 36 )
+> subset13ams4 <- na.omit(subset13am)
+> # Fit Generalized linear regression model using caret
+> modely1 <- train(HSCRP ~ Zinc + Fasting + WBC  ,
++                 Dsdata,
++                 method = "glm",
++                 trControl = trainControl(
++                   method = "cv",
++                   number = 10,
++                   verboseIter = T ))
++ Fold01: parameter=none 
+- Fold01: parameter=none 
++ Fold02: parameter=none 
+- Fold02: parameter=none 
++ Fold03: parameter=none 
+- Fold03: parameter=none 
++ Fold04: parameter=none 
+- Fold04: parameter=none 
++ Fold05: parameter=none 
+- Fold05: parameter=none 
++ Fold06: parameter=none 
+- Fold06: parameter=none 
++ Fold07: parameter=none 
+- Fold07: parameter=none 
++ Fold08: parameter=none 
+- Fold08: parameter=none 
++ Fold09: parameter=none 
+- Fold09: parameter=none 
++ Fold10: parameter=none 
+- Fold10: parameter=none 
+Aggregating results
+Fitting final model on full training set
+> 
+> modely1
+Generalized Linear Model 
+
+340 samples
+  3 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 306, 306, 306, 306, 306, 307, ... 
+Resampling results:
+
+  RMSE      Rsquared  MAE     
+  7.773265  0.160929  4.455468
+
+> 
+> # Function for Root Mean Squared Error
+> RMSE <- function(error) { sqrt(mean(error^2)) }
+> RMSE(mo2z$residuals)
+[1] 6.462432
+> ### Make Table with data
+> ### build gt + Add footnotes
+> tb1 <- Quantiles %>%
++   gt()  %>% tab_footnote(
++     footnote = "CI= Confidence Interval. N = 340. Gender = 56% Female, 44% Male.")
+> tb1
+> 
+> 
+> ### set theme
+> set_gtsummary_theme(theme_gtsummary_compact(set_theme = TRUE))
+Setting theme `Compact`
+Setting theme `Compact`
+> 
+> tb1
+> 
+> ###Create Title
+> tb1 <- tb1 %>% 
++   tab_header(
++     title = "Table 2: Quantiles of Key Variables")%>%
++   gt_theme_538()%>%
++   tab_options(
++     table.font.size = px(12L)
++   )
+> tb1
+> 
+> ### Plots
+> 
+> ###Hscrp
+> 
+> ph <- ggplot(data = mo2z,
++        mapping = aes(           # map aesthetics to columns
++          x = WBC,
++          y = HSCRP,
++          color = WBC)
++ ) + 
++   geom_point(                   # add points for each row of data
++     size = 1,
++     alpha = 0.5) +  
++   geom_smooth(                  # add a trend line 
++     method = "lm",              # with linear method
++     size = 2)  
+Warning message:
+Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated. 
+> 
+> ph +  labs(                                       
++   x = "WBC Count per 1000 cells/uL",
++   y = "HSC-CRP in mg/dL",
++   title = "Figure 2: The Relationship between HS-CRP& WBC Count")+
++  xlim(3,15 )+ylim(0, 30)
+`geom_smooth()` using formula = 'y ~ x'
+Warning messages:
+1: Removed 6 rows containing non-finite values (`stat_smooth()`). 
+2: The following aesthetics were dropped during statistical transformation: colour
+ℹ This can happen when ggplot fails to infer the correct grouping structure in the data.
+ℹ Did you forget to specify a `group` aesthetic or to convert a numerical variable into a factor? 
+3: Removed 6 rows containing missing values (`geom_point()`). 
+> 
+> 
+> ### Interaction Plot
+> 
+> interact_plot(mo2z, pred =Fasting, modx = Zinc, main.title = "Figure 3: Plot Among Fasting, Serum Zinc & HS-CRP",
++                             x.label =  "Fasting", interval = TRUE)
+> ################################################################################################################## 
+> #################################################################################################################    
+> ### Part 3   
+> ###Serum Zn vs Dietary Data
+> ##################################################################################################################
+> 
+> ### Upload the data
+> nhanes50 <- D_S_Data  %>% mutate_if(is.character,as.factor)
+> str(nhanes50)
+tibble [294 × 14] (S3: tbl_df/tbl/data.frame)
+ $ SEQN    : num [1:294] 83741 83742 83752 83759 83762 ...
+ $ Gender  : num [1:294] 1 2 2 2 2 2 1 2 1 2 ...
+ $ Age     : num [1:294] 22 32 30 19 27 27 22 20 24 29 ...
+ $ WTINT2YR: num [1:294] 37043 22744 36978 18929 38387 ...
+ $ WTMEC2YR: num [1:294] 39353 23557 38681 19250 43424 ...
+ $ SDMVPSU : num [1:294] 2 1 1 2 1 2 2 1 1 1 ...
+ $ SDMVSTRA: num [1:294] 128 125 124 121 132 119 121 129 130 129 ...
+ $ WTSA2YR : num [1:294] 31201 56483 38172 175767 48873 ...
+ $ Zinc_S  : num [1:294] 80.6 80.7 87.9 139.1 121.6 ...
+ $ DR1TZINC: num [1:294] 11.78 10.98 9.87 17.3 8.5 ...
+ $ DR2TZINC: num [1:294] 5.1 5.02 9.58 12.78 10.02 ...
+ $ Zinc_D  : num [1:294] 8.44 8 9.73 15.04 9.26 ...
+ $ Fasting : num [1:294] 9 3 1 2 6 5 6 2 12 13 ...
+ $ HSCRP   : num [1:294] 0.4 0.4 7.6 2.7 7.1 16 0.4 1.3 0.08 5 ...
+> 
+> ########################## Create Survey Weight Equation ##########################
+> nhc123 <- svydesign(id=~SDMVPSU, weights=~WTSA2YR, strata=~SDMVSTRA,
++                     nest=TRUE, survey.lonely.psu = "adjust", data= nhanes50)
+> 
+> ### Summary and Structure
+> summary(nhc123)
+Stratified 1 - level Cluster Sampling design (with replacement)
+With (30) clusters.
+svydesign(id = ~SDMVPSU, weights = ~WTSA2YR, strata = ~SDMVSTRA, 
+    nest = TRUE, survey.lonely.psu = "adjust", data = nhanes50)
+Probabilities:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+1.411e-06 8.041e-06 1.405e-05 1.576e-05 2.094e-05 5.378e-05 
+Stratum Sizes: 
+           119 120 121 122 123 124 125 126 127 128 129 130 131 132 133
+obs         19  27  28  20  11  28  16  19  11  14  13  22  22  25  19
+design.PSU   2   2   2   2   2   2   2   2   2   2   2   2   2   2   2
+actual.PSU   2   2   2   2   2   2   2   2   2   2   2   2   2   2   2
+Data variables:
+ [1] "SEQN"     "Gender"   "Age"      "WTINT2YR" "WTMEC2YR" "SDMVPSU"  "SDMVSTRA" "WTSA2YR"  "Zinc_S"   "DR1TZINC"
+[11] "DR2TZINC" "Zinc_D"   "Fasting"  "HSCRP"   
+> str(nhc123) 
+List of 9
+ $ cluster   :'data.frame':	294 obs. of  1 variable:
+  ..$ SDMVPSU: Factor w/ 30 levels "119.1","119.2",..: 20 13 11 6 27 2 6 21 23 21 ...
+  ..- attr(*, "terms")=Classes 'terms', 'formula'  language ~SDMVPSU
+  .. .. ..- attr(*, "variables")= language list(SDMVPSU)
+  .. .. ..- attr(*, "factors")= int [1, 1] 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr "SDMVPSU"
+  .. .. .. .. ..$ : chr "SDMVPSU"
+  .. .. ..- attr(*, "term.labels")= chr "SDMVPSU"
+  .. .. ..- attr(*, "order")= int 1
+  .. .. ..- attr(*, "intercept")= int 1
+  .. .. ..- attr(*, "response")= int 0
+  .. .. ..- attr(*, ".Environment")=<environment: R_GlobalEnv> 
+  .. .. ..- attr(*, "predvars")= language list(SDMVPSU)
+  .. .. ..- attr(*, "dataClasses")= Named chr "numeric"
+  .. .. .. ..- attr(*, "names")= chr "SDMVPSU"
+ $ strata    :'data.frame':	294 obs. of  1 variable:
+  ..$ SDMVSTRA: num [1:294] 128 125 124 121 132 119 121 129 130 129 ...
+  ..- attr(*, "terms")=Classes 'terms', 'formula'  language ~SDMVSTRA
+  .. .. ..- attr(*, "variables")= language list(SDMVSTRA)
+  .. .. ..- attr(*, "factors")= int [1, 1] 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr "SDMVSTRA"
+  .. .. .. .. ..$ : chr "SDMVSTRA"
+  .. .. ..- attr(*, "term.labels")= chr "SDMVSTRA"
+  .. .. ..- attr(*, "order")= int 1
+  .. .. ..- attr(*, "intercept")= int 1
+  .. .. ..- attr(*, "response")= int 0
+  .. .. ..- attr(*, ".Environment")=<environment: R_GlobalEnv> 
+  .. .. ..- attr(*, "predvars")= language list(SDMVSTRA)
+  .. .. ..- attr(*, "dataClasses")= Named chr "numeric"
+  .. .. .. ..- attr(*, "names")= chr "SDMVSTRA"
+ $ has.strata: logi TRUE
+ $ prob      : Named num [1:294] 3.21e-05 1.77e-05 2.62e-05 5.69e-06 2.05e-05 ...
+  ..- attr(*, "names")= chr [1:294] "1" "2" "3" "4" ...
+ $ allprob   :'data.frame':	294 obs. of  1 variable:
+  ..$ WTSA2YR: num [1:294] 3.21e-05 1.77e-05 2.62e-05 5.69e-06 2.05e-05 ...
+ $ call      : language svydesign(id = ~SDMVPSU, weights = ~WTSA2YR, strata = ~SDMVSTRA, nest = TRUE, survey.lonely.psu = "adjust", data = nhanes50)
+ $ variables :'data.frame':	294 obs. of  14 variables:
+  ..$ SEQN    : num [1:294] 83741 83742 83752 83759 83762 ...
+  ..$ Gender  : num [1:294] 1 2 2 2 2 2 1 2 1 2 ...
+  ..$ Age     : num [1:294] 22 32 30 19 27 27 22 20 24 29 ...
+  ..$ WTINT2YR: num [1:294] 37043 22744 36978 18929 38387 ...
+  ..$ WTMEC2YR: num [1:294] 39353 23557 38681 19250 43424 ...
+  ..$ SDMVPSU : num [1:294] 2 1 1 2 1 2 2 1 1 1 ...
+  ..$ SDMVSTRA: num [1:294] 128 125 124 121 132 119 121 129 130 129 ...
+  ..$ WTSA2YR : num [1:294] 31201 56483 38172 175767 48873 ...
+  ..$ Zinc_S  : num [1:294] 80.6 80.7 87.9 139.1 121.6 ...
+  ..$ DR1TZINC: num [1:294] 11.78 10.98 9.87 17.3 8.5 ...
+  ..$ DR2TZINC: num [1:294] 5.1 5.02 9.58 12.78 10.02 ...
+  ..$ Zinc_D  : num [1:294] 8.44 8 9.73 15.04 9.26 ...
+  ..$ Fasting : num [1:294] 9 3 1 2 6 5 6 2 12 13 ...
+  ..$ HSCRP   : num [1:294] 0.4 0.4 7.6 2.7 7.1 16 0.4 1.3 0.08 5 ...
+ $ fpc       :List of 2
+  ..$ popsize : NULL
+  ..$ sampsize: int [1:294, 1] 2 2 2 2 2 2 2 2 2 2 ...
+  ..- attr(*, "class")= chr "survey_fpc"
+ $ pps       : logi FALSE
+ - attr(*, "class")= chr [1:2] "survey.design2" "survey.design"
+> 
+> ### Create Equation
+> out12 <- svycor(~Zinc_S + Zinc_D, design = nhc123)
+> out12$cors
+           Zinc_S     Zinc_D
+Zinc_S 1.00000000 0.04686167
+Zinc_D 0.04686167 1.00000000
+> 
+> ### Variance
+> v1 <- svyvar(~Zinc_S + Zinc_D, design = nhc123)
+> as.matrix(v1)
+           Zinc_S    Zinc_D
+Zinc_S 235.842009  3.239721
+Zinc_D   3.239721 20.265557
+attr(,"var")
+           Zinc_S    Zinc_S    Zinc_D     Zinc_D
+Zinc_S 529.284807  1.450519  1.450519 -10.582250
+Zinc_S   1.450519 10.084905 10.084905  -1.334203
+Zinc_D   1.450519 10.084905 10.084905  -1.334203
+Zinc_D -10.582250 -1.334203 -1.334203   3.234576
+attr(,"statistic")
+[1] "variance"
+> cov2cor(as.matrix(v1))
+           Zinc_S     Zinc_D
+Zinc_S 1.00000000 0.04686167
+Zinc_D 0.04686167 1.00000000
+attr(,"var")
+           Zinc_S    Zinc_S    Zinc_D     Zinc_D
+Zinc_S 529.284807  1.450519  1.450519 -10.582250
+Zinc_S   1.450519 10.084905 10.084905  -1.334203
+Zinc_D   1.450519 10.084905 10.084905  -1.334203
+Zinc_D -10.582250 -1.334203 -1.334203   3.234576
+attr(,"statistic")
+[1] "variance"
+> 
+> ### Graph Results
+> svyplot(Zinc_S ~ Zinc_D, design=nhc123
++         , style="bubble" ,ylab=" Serum Zinc (µg/dL)", 
++           xlab="Dietary Zinc (mg)", main="Figure 4: Relationship between Serum & Dietary Zn")
+>  
+> smoother <- svysmooth(Zinc_S ~ Zinc_D,
++                            design=nhc123, bandwidth=10)
+> lines(smoother, col="blue", lwd=4)
