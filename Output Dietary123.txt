@@ -1,0 +1,735 @@
+############# Output Dietary#########
+> ################# Survey Weighted NHANES Geaneralized Mixed Linear Models  #####################################################
+> ### Download  data from NHANES
+> ### SPSS--> Excel--> Code data on Excel
+> ### see https://www.extendoffice.com/documents/excel/5168-excel-categorize-data-based-on-values.html
+> 
+> #### For References on the Script, see paper
+> ### Library packages are uploaded as needed 
+> #### For general coding and plotting graphs
+> 
+> library("tidyverse")
+> library("dbplyr")
+> library("ggplot2")
+> library("caret")
+> library('dplyr')
+> library("gtsummary")
+> library("jtools")
+> library("survey")
+> library("interactions")
+> ####> #######################################################################################################################
+> ### Final Script 2b
+> #####################################################################################################################
+> ###Upload file from directory
+> nhanes2 <- q123_1 %>% mutate_if(is.character,as.factor)
+> class(nhanes2)
+[1] "tbl_df"     "tbl"        "data.frame"
+> print(nhanes2)
+# A tibble: 1,211 × 27
+    SEQN Fasting    Fasting_R HSCRP_R  HSCRP   Age SDMVPSU    WT4 SDMVSTRA Gender Ethnicity     BMI   WBC
+   <dbl> <fct>          <dbl>   <dbl>  <dbl> <dbl>   <dbl>  <dbl>    <dbl> <fct>  <fct>       <dbl> <dbl>
+ 1 83741 Fasted             9    1.3   1.43     22       2  9772.      128 Male   Black        28     3.5
+ 2 83742 Not Fasted         3    3     2.90     32       1  7205.      125 Female Mexican Am…  28.2   8.3
+ 3 83752 Not Fasted         1    0.9   1.08     30       1 11830.      124 Female Other Hisp…  26.6   9.8
+ 4 83785 Not Fasted         5    3.1   2.99     27       2 61717.      119 Female Black        25.3   8.5
+ 5 83788 Not Fasted         6    1.1   1.25     22       2 11222.      121 Male   Other Hisp…  33.5   5.7
+ 6 83814 Not Fasted         2    0.08  0.365    20       1  7262.      129 Female Black        29.1   5.8
+ 7 83818 Fasted            12    0.5   0.730    24       1 76254.      130 Male   White        18.6   7.2
+ 8 83821 Not Fasted         0   16    14.2      27       1 14559.      126 Male   White        32.1   9  
+ 9 83828 Fasted            13    0.6   0.817    29       1 18742.      129 Female Mexican Am…  18.8   6.9
+10 83829 Not Fasted         1    0.4   0.643    23       1 14426.      119 Male   Asian        29.5   8  
+# ℹ 1,201 more rows
+# ℹ 14 more variables: Kcal <fct>, Kcal_R <dbl>, Protein <dbl>, Carbohydrate <fct>,
+#   Carbohydrate_R <dbl>, Sugar <dbl>, Zinc <fct>, Zinc_R <dbl>, Choline <dbl>, Folate <dbl>,
+#   Copper <dbl>, S.Fat <dbl>, M.Fat <dbl>, P.Fat <dbl>
+# ℹ Use `print(n = ...)` to see more rows
+> 
+> ######### Summary of Data################
+> summary(nhanes2)
+      SEQN              Fasting      Fasting_R         HSCRP_R           HSCRP              Age       
+ Min.   : 83741   Fasted    :515   Min.   : 0.000   Min.   : 0.080   Min.   : 0.0053   Min.   :19.00  
+ 1st Qu.: 88601   Not Fasted:696   1st Qu.: 2.000   1st Qu.: 0.500   1st Qu.: 0.4693   1st Qu.:23.00  
+ Median : 93165                    Median : 5.000   Median : 1.200   Median : 1.2013   Median :27.00  
+ Mean   : 93202                    Mean   : 6.912   Mean   : 3.254   Mean   : 3.2625   Mean   :26.83  
+ 3rd Qu.: 97993                    3rd Qu.:11.000   3rd Qu.: 3.410   3rd Qu.: 3.3978   3rd Qu.:31.00  
+ Max.   :102952                    Max.   :33.000   Max.   :90.510   Max.   :90.5100   Max.   :35.00  
+    SDMVPSU           WT4            SDMVSTRA      Gender               Ethnicity        BMI       
+ Min.   :1.000   Min.   :  1431   Min.   :119   Female:614   Asian           :197   Min.   :17.00  
+ 1st Qu.:1.000   1st Qu.:  6696   1st Qu.:125   Male  :597   Black           :253   1st Qu.:22.10  
+ Median :1.000   Median : 13601   Median :132                Mexican American:226   Median :25.70  
+ Mean   :1.495   Mean   : 24621   Mean   :133                Other Hispanic  :136   Mean   :25.77  
+ 3rd Qu.:2.000   3rd Qu.: 30282   3rd Qu.:141                Other Race      : 65   3rd Qu.:29.50  
+ Max.   :2.000   Max.   :450998   Max.   :148                White           :334   Max.   :34.90  
+      WBC                             Kcal         Kcal_R          Protein                Carbohydrate
+ Min.   :  2.000   High Calorie Diet    :437   Min.   : 227.5   Min.   :  2.58   High Intake    :746  
+ 1st Qu.:  5.800   Low Calorie Diet     :349   1st Qu.:1423.8   1st Qu.: 53.85   Low Intake     :223  
+ Median :  7.100   Moderate Calorie Diet:425   Median :1852.5   Median : 70.00   Moderate Intake:242  
+ Mean   :  7.693                               Mean   :1950.6   Mean   : 74.57                        
+ 3rd Qu.:  8.600                               3rd Qu.:2354.5   3rd Qu.: 89.25                        
+ Max.   :400.000                               Max.   :8313.0   Max.   :305.08                        
+ Carbohydrate_R        Sugar                        Zinc         Zinc_R          Choline      
+ Min.   :  23.09   Min.   :  1.675   Adequate Intake  :772   Min.   : 0.325   Min.   :   4.9  
+ 1st Qu.: 167.53   1st Qu.: 61.862   Inadequate Intake:439   1st Qu.: 6.758   1st Qu.: 196.9  
+ Median : 222.24   Median : 92.260                           Median : 9.335   Median : 277.5  
+ Mean   : 237.89   Mean   :103.082                           Mean   :10.159   Mean   : 303.9  
+ 3rd Qu.: 287.89   3rd Qu.:129.822                           3rd Qu.:12.455   3rd Qu.: 381.7  
+ Max.   :1063.07   Max.   :446.485                           Max.   :39.120   Max.   :1166.2  
+     Folate           Copper           S.Fat             M.Fat             P.Fat       
+ Min.   :  29.5   Min.   :0.1850   Min.   :  2.066   Min.   :  1.635   Min.   : 1.448  
+ 1st Qu.: 302.0   1st Qu.:0.7425   1st Qu.: 16.333   1st Qu.: 17.515   1st Qu.:11.182  
+ Median : 420.0   Median :0.9700   Median : 22.846   Median : 24.605   Median :16.070  
+ Mean   : 487.8   Mean   :1.0734   Mean   : 25.189   Mean   : 26.398   Mean   :17.720  
+ 3rd Qu.: 613.0   3rd Qu.:1.2925   3rd Qu.: 31.396   3rd Qu.: 32.505   3rd Qu.:22.572  
+ Max.   :3851.5   Max.   :3.6800   Max.   :127.370   Max.   :133.245   Max.   :85.880  
+> 
+> ###########Structure of the Data############
+> str(nhanes2)
+tibble [1,211 × 27] (S3: tbl_df/tbl/data.frame)
+ $ SEQN          : num [1:1211] 83741 83742 83752 83785 83788 ...
+ $ Fasting       : Factor w/ 2 levels "Fasted","Not Fasted": 1 2 2 2 2 2 1 2 1 2 ...
+ $ Fasting_R     : num [1:1211] 9 3 1 5 6 2 12 0 13 1 ...
+ $ HSCRP_R       : num [1:1211] 1.3 3 0.9 3.1 1.1 0.08 0.5 16 0.6 0.4 ...
+ $ HSCRP         : num [1:1211] 1.43 2.9 1.08 2.99 1.25 ...
+ $ Age           : num [1:1211] 22 32 30 27 22 20 24 27 29 23 ...
+ $ SDMVPSU       : num [1:1211] 2 1 1 2 2 1 1 1 1 1 ...
+ $ WT4           : num [1:1211] 9772 7205 11830 61717 11222 ...
+ $ SDMVSTRA      : num [1:1211] 128 125 124 119 121 129 130 126 129 119 ...
+ $ Gender        : Factor w/ 2 levels "Female","Male": 2 1 1 1 2 1 2 2 1 2 ...
+ $ Ethnicity     : Factor w/ 6 levels "Asian","Black",..: 2 3 4 2 4 2 6 6 3 1 ...
+ $ BMI           : num [1:1211] 28 28.2 26.6 25.3 33.5 29.1 18.6 32.1 18.8 29.5 ...
+ $ WBC           : num [1:1211] 3.5 8.3 9.8 8.5 5.7 5.8 7.2 9 6.9 8 ...
+ $ Kcal          : Factor w/ 3 levels "High Calorie Diet",..: 3 3 1 1 1 2 1 2 2 1 ...
+ $ Kcal_R        : num [1:1211] 1771 2034 3114 2528 2136 ...
+ $ Protein       : num [1:1211] 70 61.6 89.2 77.9 82.8 ...
+ $ Carbohydrate  : Factor w/ 3 levels "High Intake",..: 1 1 1 1 1 2 1 2 3 1 ...
+ $ Carbohydrate_R: num [1:1211] 232 272 395 334 313 ...
+ $ Sugar         : num [1:1211] 121 127 206 155 156 ...
+ $ Zinc          : Factor w/ 2 levels "Adequate Intake",..: 1 1 1 1 1 2 2 2 2 2 ...
+ $ Zinc_R        : num [1:1211] 8.44 8 9.73 11.46 9.86 ...
+ $ Choline       : num [1:1211] 265 259 613 241 361 ...
+ $ Folate        : num [1:1211] 645 637 538 331 584 ...
+ $ Copper        : num [1:1211] 0.755 1.035 1.215 0.845 1.625 ...
+ $ S.Fat         : num [1:1211] 24.5 29.7 41.3 34.6 19.1 ...
+ $ M.Fat         : num [1:1211] 21 29.6 47.4 35.3 24.8 ...
+ $ P.Fat         : num [1:1211] 12.3 16.2 36 19.4 16.5 ...
+> 
+> ######## Head of structure################
+> head(nhanes2)
+# A tibble: 6 × 27
+   SEQN Fasting  Fasting_R HSCRP_R HSCRP   Age SDMVPSU    WT4 SDMVSTRA Gender Ethnicity   BMI   WBC Kcal 
+  <dbl> <fct>        <dbl>   <dbl> <dbl> <dbl>   <dbl>  <dbl>    <dbl> <fct>  <fct>     <dbl> <dbl> <fct>
+1 83741 Fasted           9    1.3  1.43     22       2  9772.      128 Male   Black      28     3.5 Mode…
+2 83742 Not Fas…         3    3    2.90     32       1  7205.      125 Female Mexican …  28.2   8.3 Mode…
+3 83752 Not Fas…         1    0.9  1.08     30       1 11830.      124 Female Other Hi…  26.6   9.8 High…
+4 83785 Not Fas…         5    3.1  2.99     27       2 61717.      119 Female Black      25.3   8.5 High…
+5 83788 Not Fas…         6    1.1  1.25     22       2 11222.      121 Male   Other Hi…  33.5   5.7 High…
+6 83814 Not Fas…         2    0.08 0.365    20       1  7262.      129 Female Black      29.1   5.8 Low …
+# ℹ 13 more variables: Kcal_R <dbl>, Protein <dbl>, Carbohydrate <fct>, Carbohydrate_R <dbl>,
+#   Sugar <dbl>, Zinc <fct>, Zinc_R <dbl>, Choline <dbl>, Folate <dbl>, Copper <dbl>, S.Fat <dbl>,
+#   M.Fat <dbl>, P.Fat <dbl>
+> 
+> ############Tail of structure############
+> tail(nhanes2)
+# A tibble: 6 × 27
+    SEQN Fasting    Fasting_R HSCRP_R   HSCRP   Age SDMVPSU    WT4 SDMVSTRA Gender Ethnicity    BMI   WBC
+   <dbl> <fct>          <dbl>   <dbl>   <dbl> <dbl>   <dbl>  <dbl>    <dbl> <fct>  <fct>      <dbl> <dbl>
+1 102868 Fasted            14    0.82  0.603     23       1  5786.      138 Female White       19.5   4.8
+2 102869 Fasted            13   18.7  21.2       25       1 59845.      137 Male   Other His…  21.1   9.8
+3 102899 Fasted            13    0.85  0.638     19       1 33948.      145 Female White       22.5   5.7
+4 102918 Fasted             9    0.33  0.0398    21       2  8612.      136 Female Mexican A…  27.1   6.7
+5 102930 Not Fasted         3    0.51  0.247     32       1 15944.      138 Female Asian       29.7   5.8
+6 102952 Fasted            14    0.45  0.178     35       2 12533.      135 Female Mexican A…  27.6   5.1
+# ℹ 14 more variables: Kcal <fct>, Kcal_R <dbl>, Protein <dbl>, Carbohydrate <fct>,
+#   Carbohydrate_R <dbl>, Sugar <dbl>, Zinc <fct>, Zinc_R <dbl>, Choline <dbl>, Folate <dbl>,
+#   Copper <dbl>, S.Fat <dbl>, M.Fat <dbl>, P.Fat <dbl>
+> 
+> ######Determine Column Names###############
+> 
+> colnames(nhanes2)
+ [1] "SEQN"           "Fasting"        "Fasting_R"      "HSCRP_R"        "HSCRP"         
+ [6] "Age"            "SDMVPSU"        "WT4"            "SDMVSTRA"       "Gender"        
+[11] "Ethnicity"      "BMI"            "WBC"            "Kcal"           "Kcal_R"        
+[16] "Protein"        "Carbohydrate"   "Carbohydrate_R" "Sugar"          "Zinc"          
+[21] "Zinc_R"         "Choline"        "Folate"         "Copper"         "S.Fat"         
+[26] "M.Fat"          "P.Fat"         
+> 
+> ####################################################################################################################################################
+> #### Descriptive Statistics
+> set_gtsummary_theme(theme_gtsummary_compact(set_theme = TRUE))
+Setting theme `Compact`
+Setting theme `Compact`
+> 
+> table_fuve <- svydesign(id=~SDMVPSU, weights=~WT4, strata=~SDMVSTRA,
++                         nest=TRUE, survey.lonely.psu = "adjust", data= nhanes2)%>% 
++   
++   
++   tbl_svysummary(by= "Zinc", # stratification variable.
++                  include = c(HSCRP, Fasting, Kcal, Carbohydrate,Folate,Choline, WBC, BMI, Ethnicity, Gender), 
++                  percent = "column",  #Column or Row percentage, depending on your needs
++                  statistic = list(all_continuous() ~ "{mean} ({sd})", # What statistics do you want on your table. 
++                                   #In this case, for all continuous variables it will generate means and standard deviation.
++                                   #For all categorical variables, it will generate weighted percentage, if weight variable is included above.
++                                   all_categorical() ~ "{p}"),
++                  digits = list(all_continuous() ~ c(1,1), 
++                                all_categorical() ~ 1),
++                  label = list(HSCRP ~ "HSCRP (mg/L)",
++                               Kcal ~ "Kcal (energy)",
++                               Carbohydrate ~"Carbohydrate (g)",
++                               Folate ~ "Folate (mcg)",
++                               Choline ~ "Choline (mg)",
++                               WBC ~" WBC (1000 cells/uL)",
++                               BMI ~ "BMI (kg/m2)",
++                               Fasting ~ "Fasting (in hrs)",
++                               Ethnicity ~ "Race and Ethnicity",
++                               Gender~ "Gender"))%>%
++   add_p(
++     test = list(
++       all_continuous() ~ "svy.wilcox.test",
++       all_categorical() ~ "svy.adj.wald.test")) %>%
++   modify_header(update = list(label ~ "",
++                               stat_1 ~ "**Adequate Intake**",
++                               stat_2 ~ "**Inadequate Intake**"))%>%
++   modify_spanning_header(starts_with("stat_") ~ "**Weighted by Zinc Intake(%)**") %>%
++   modify_caption("**Table 1: Survey Adjusted Demographics and Other Characteristics of the Participants**")%>%
++   modify_footnote(
++     all_stat_cols() ~ " Mean (SD) or Frequency by % reported.N = 1211.")
+> table_fuve 
+>   
+> 
+> tbl_butchered <-
++   table_fuve %>%
++   tbl_butcher()  
+> tbl_butchered
+> 
+> 
+> ###Create Title
+> tbl_butchered <- tbl_butchered %>% 
++   gt_theme_538()%>%
++   tab_options(
++     table.font.size = px(12L)
++   )
+> #############################################################################################
+> ###  Model 1
+> #############################################################################################
+> ### Adjusted Model
+> d1 <- subset(nhc10,Age <36)
+> nhc10 <- na.omit(d1)
+> 
+> moa <- svyglm(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted") + Copper+
++                 WBC + Choline +Folate + Gender + BMI+ Ethnicity, design = nhc10, family = gaussian(link='log'))
+> moa
+Stratified 1 - level Cluster Sampling design (with replacement)
+With (60) clusters.
+subset(nhc10, Age < 36)
+
+Call:  svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + Copper + WBC + Choline + 
+    Folate + Gender + BMI + Ethnicity, design = nhc10, family = gaussian(link = "log"))
+
+Coefficients:
+                                                                                       (Intercept)  
+                                                                                         1.4753175  
+                                           relevel(Zinc, ref = "Inadequate Intake")Adequate Intake  
+                                                                                        -0.4503636  
+                                                        relevel(Fasting, ref = "Not Fasted")Fasted  
+                                                                                         0.5670499  
+                                                                                            Copper  
+                                                                                        -0.0710155  
+                                                                                               WBC  
+                                                                                         0.0054437  
+                                                                                           Choline  
+                                                                                         0.0018860  
+                                                                                            Folate  
+                                                                                        -0.0004827  
+                                                                                        GenderMale  
+                                                                                         0.1452542  
+                                                                                               BMI  
+                                                                                        -0.0127660  
+                                                                                    EthnicityBlack  
+                                                                                        -0.2179605  
+                                                                         EthnicityMexican American  
+                                                                                        -0.2629749  
+                                                                           EthnicityOther Hispanic  
+                                                                                        -0.3545880  
+                                                                               EthnicityOther Race  
+                                                                                        -0.5426232  
+                                                                                    EthnicityWhite  
+                                                                                        -0.6626499  
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted  
+                                                                                        -0.5657958  
+
+Degrees of Freedom: 1210 Total (i.e. Null);  16 Residual
+Null Deviance:	    50870 
+Residual Deviance: 48200 	AIC: 8582
+> 
+> #Sums
+> summary(moa,df= degf(nhc10))
+
+Call:
+svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + Copper + WBC + Choline + 
+    Folate + Gender + BMI + Ethnicity, design = nhc10, family = gaussian(link = "log"))
+
+Survey design:
+subset(nhc10, Age < 36)
+
+Coefficients:
+                                                                                                     Estimate
+(Intercept)                                                                                         1.4753175
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                            -0.4503636
+relevel(Fasting, ref = "Not Fasted")Fasted                                                          0.5670499
+Copper                                                                                             -0.0710155
+WBC                                                                                                 0.0054437
+Choline                                                                                             0.0018860
+Folate                                                                                             -0.0004827
+GenderMale                                                                                          0.1452542
+BMI                                                                                                -0.0127660
+EthnicityBlack                                                                                     -0.2179605
+EthnicityMexican American                                                                          -0.2629749
+EthnicityOther Hispanic                                                                            -0.3545880
+EthnicityOther Race                                                                                -0.5426232
+EthnicityWhite                                                                                     -0.6626499
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted -0.5657958
+                                                                                                   Std. Error t value
+(Intercept)                                                                                         0.4222679   3.494
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                             0.2977854  -1.512
+relevel(Fasting, ref = "Not Fasted")Fasted                                                          0.2579750   2.198
+Copper                                                                                              0.1561773  -0.455
+WBC                                                                                                 0.0011327   4.806
+Choline                                                                                             0.0007283   2.590
+Folate                                                                                              0.0003740  -1.291
+GenderMale                                                                                          0.1743857   0.833
+BMI                                                                                                 0.0265607  -0.481
+EthnicityBlack                                                                                      0.4489749  -0.485
+EthnicityMexican American                                                                           0.4624716  -0.569
+EthnicityOther Hispanic                                                                             0.3687102  -0.962
+EthnicityOther Race                                                                                 0.3815141  -1.422
+EthnicityWhite                                                                                      0.3400515  -1.949
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted  0.2593764  -2.181
+                                                                                                   Pr(>|t|)    
+(Intercept)                                                                                          0.0015 ** 
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                              0.1409    
+relevel(Fasting, ref = "Not Fasted")Fasted                                                           0.0358 *  
+Copper                                                                                               0.6526    
+WBC                                                                                                4.03e-05 ***
+Choline                                                                                              0.0147 *  
+Folate                                                                                               0.2067    
+GenderMale                                                                                           0.4115    
+BMI                                                                                                  0.6343    
+EthnicityBlack                                                                                       0.6309    
+EthnicityMexican American                                                                            0.5738    
+EthnicityOther Hispanic                                                                              0.3439    
+EthnicityOther Race                                                                                  0.1653    
+EthnicityWhite                                                                                       0.0607 .  
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted   0.0371 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 39.81693)
+
+Number of Fisher Scoring iterations: 17
+
+> 
+> ### Investigate terms ( WALD & LRT)
+> regTermTest(moa, test.terms= ~relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted")+
++               WBC + Choline +Folate +BMI+ Gender+ Ethnicity, method="Wald", df=degf(nhc10))
+Wald test for relevel(Zinc, ref = "Inadequate Intake") relevel(Fasting, ref = "Not Fasted") WBC Choline Folate BMI Gender Ethnicity relevel(Zinc, ref = "Inadequate Intake"):relevel(Fasting, ref = "Not Fasted")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + Copper + WBC + Choline + 
+    Folate + Gender + BMI + Ethnicity, design = nhc10, family = gaussian(link = "log"))
+F =  47.06303  on  13  and  30  df: p= 2.556e-16 
+> 
+> regTermTest(moa,~ relevel(Zinc, ref = "Inadequate Intake"): relevel(Fasting, ref="Not Fasted"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake"):relevel(Fasting, ref = "Not Fasted")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + Copper + WBC + Choline + 
+    Folate + Gender + BMI + Ethnicity, design = nhc10, family = gaussian(link = "log"))
+Working 2logLR =  4.672261 p= 0.048034 
+df=1;  denominator df= 16
+> 
+> regTermTest(moa, ~relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake") relevel(Fasting, ref = "Not Fasted") relevel(Zinc, ref = "Inadequate Intake"):relevel(Fasting, ref = "Not Fasted")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + Copper + WBC + Choline + 
+    Folate + Gender + BMI + Ethnicity, design = nhc10, family = gaussian(link = "log"))
+Working 2logLR =  9.732079 p= 0.063527 
+(scale factors:  2 0.7 0.31 );  denominator df= 16
+> ### Adjusted w/out Ethnicity
+> 
+> mo1 <- svyglm(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted") +
++                    WBC + Choline +Folate + Gender + BMI, design = nhc10, family = gaussian(link='log'))
+> mo1
+Stratified 1 - level Cluster Sampling design (with replacement)
+With (60) clusters.
+subset(nhc10, Age < 36)
+
+Call:  svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + WBC + Choline + Folate + 
+    Gender + BMI, design = nhc10, family = gaussian(link = "log"))
+
+Coefficients:
+                                                                                       (Intercept)  
+                                                                                         1.3808948  
+                                           relevel(Zinc, ref = "Inadequate Intake")Adequate Intake  
+                                                                                        -0.3329300  
+                                                        relevel(Fasting, ref = "Not Fasted")Fasted  
+                                                                                         0.5659947  
+                                                                                               WBC  
+                                                                                         0.0054761  
+                                                                                           Choline  
+                                                                                         0.0019468  
+                                                                                            Folate  
+                                                                                        -0.0006024  
+                                                                                        GenderMale  
+                                                                                         0.1117447  
+                                                                                               BMI  
+                                                                                        -0.0237480  
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted  
+                                                                                        -0.5734269  
+
+Degrees of Freedom: 1210 Total (i.e. Null);  22 Residual
+Null Deviance:	    50870 
+Residual Deviance: 48770 	AIC: 8584
+> 
+> ###Summs
+> summary(mo1,df= degf(nhc10))
+
+Call:
+svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + WBC + Choline + Folate + 
+    Gender + BMI, design = nhc10, family = gaussian(link = "log"))
+
+Survey design:
+subset(nhc10, Age < 36)
+
+Coefficients:
+                                                                                                     Estimate
+(Intercept)                                                                                         1.3808948
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                            -0.3329300
+relevel(Fasting, ref = "Not Fasted")Fasted                                                          0.5659947
+WBC                                                                                                 0.0054761
+Choline                                                                                             0.0019468
+Folate                                                                                             -0.0006024
+GenderMale                                                                                          0.1117447
+BMI                                                                                                -0.0237480
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted -0.5734269
+                                                                                                   Std. Error t value
+(Intercept)                                                                                         0.3803844   3.630
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                             0.2918275  -1.141
+relevel(Fasting, ref = "Not Fasted")Fasted                                                          0.2167716   2.611
+WBC                                                                                                 0.0006948   7.882
+Choline                                                                                             0.0007385   2.636
+Folate                                                                                              0.0003859  -1.561
+GenderMale                                                                                          0.1711926   0.653
+BMI                                                                                                 0.0140981  -1.684
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted  0.2591164  -2.213
+                                                                                                   Pr(>|t|)    
+(Intercept)                                                                                         0.00104 ** 
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                             0.26296    
+relevel(Fasting, ref = "Not Fasted")Fasted                                                          0.01396 *  
+WBC                                                                                                8.52e-09 ***
+Choline                                                                                             0.01314 *  
+Folate                                                                                              0.12900    
+GenderMale                                                                                          0.51889    
+BMI                                                                                                 0.10247    
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted  0.03465 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 40.29924)
+
+Number of Fisher Scoring iterations: 13
+
+> confint(mo1,df=degf(nhc10))
+                                                                                                          2.5 %
+(Intercept)                                                                                         0.592025840
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                            -0.938143266
+relevel(Fasting, ref = "Not Fasted")Fasted                                                          0.116438024
+WBC                                                                                                 0.004035184
+Choline                                                                                             0.000415353
+Folate                                                                                             -0.001402652
+GenderMale                                                                                         -0.243287015
+BMI                                                                                                -0.052985575
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted -1.110801490
+                                                                                                          97.5 %
+(Intercept)                                                                                         2.1697637863
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake                                             0.2722833254
+relevel(Fasting, ref = "Not Fasted")Fasted                                                          1.0155513924
+WBC                                                                                                 0.0069170171
+Choline                                                                                             0.0034782976
+Folate                                                                                              0.0001978863
+GenderMale                                                                                          0.4667764645
+BMI                                                                                                 0.0054896012
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted -0.0360522478
+> 
+> set_gtsummary_theme(theme_gtsummary_compact(set_theme = TRUE))
+Setting theme `Compact`
+Setting theme `Compact`
+> z1 <-  tbl_regression(mo1,intercept= FALSE,add_estimate_to_reference_rows = TRUE
++                       , exponentiate = TRUE)%>%   remove_row_type(type = "header")  %>%
++   modify_caption("**Adjusted Analysis of the Coefficients of Participants** ")
+> z1
+> 
+> 
+> ### Investigate terms ( WALD & LRT)
+> regTermTest(mo1, test.terms= ~relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted")+
++               WBC + Choline +Folate +BMI+ Gender, method="Wald", df=degf(nhc10))
+Wald test for relevel(Zinc, ref = "Inadequate Intake") relevel(Fasting, ref = "Not Fasted") WBC Choline Folate BMI Gender relevel(Zinc, ref = "Inadequate Intake"):relevel(Fasting, ref = "Not Fasted")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + WBC + Choline + Folate + 
+    Gender + BMI, design = nhc10, family = gaussian(link = "log"))
+F =  75.0806  on  8  and  30  df: p= < 2.22e-16 
+> 
+> regTermTest(mo1,~ relevel(Zinc, ref = "Inadequate Intake"): relevel(Fasting, ref="Not Fasted"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake"):relevel(Fasting, ref = "Not Fasted")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + WBC + Choline + Folate + 
+    Gender + BMI, design = nhc10, family = gaussian(link = "log"))
+Working 2logLR =  5.027683 p= 0.036861 
+df=1;  denominator df= 22
+> 
+> regTermTest(mo1, ~relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted"), method = "LRT")
+Working (Rao-Scott+F) LRT for relevel(Zinc, ref = "Inadequate Intake") relevel(Fasting, ref = "Not Fasted") relevel(Zinc, ref = "Inadequate Intake"):relevel(Fasting, ref = "Not Fasted")
+ in svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted") + WBC + Choline + Folate + 
+    Gender + BMI, design = nhc10, family = gaussian(link = "log"))
+Working 2logLR =  11.04525 p= 0.041547 
+(scale factors:  2 0.59 0.41 );  denominator df= 22
+
+
+ ### Train data
+> set.seed(123)
+> subset13am <- subset(nhanes2, Age< 36 )
+> subset13ams4 <- na.omit(subset13am)
+>  
+>  
+> # Fit Generalized linear regression model using caret
+
+> modely <- train(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted")+
++                   WBC + Choline +Folate +Gender + BMI + Ethnicity,
++                                    subset13ams4,
++                                     method = "glm",
++                                     trControl = trainControl(
++                                         method = "cv",
++                                         number = 10,
++                                         verboseIter = T ))
++ Fold01: parameter=none 
+- Fold01: parameter=none 
++ Fold02: parameter=none 
+- Fold02: parameter=none 
++ Fold03: parameter=none 
+- Fold03: parameter=none 
++ Fold04: parameter=none 
+- Fold04: parameter=none 
++ Fold05: parameter=none 
+- Fold05: parameter=none 
++ Fold06: parameter=none 
+- Fold06: parameter=none 
++ Fold07: parameter=none 
+- Fold07: parameter=none 
++ Fold08: parameter=none 
+- Fold08: parameter=none 
++ Fold09: parameter=none 
+- Fold09: parameter=none 
++ Fold10: parameter=none 
+- Fold10: parameter=none 
+Aggregating results
+Fitting final model on full training set
+> 
+> modely
+Generalized Linear Model 
+
+1211 samples
+   8 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 1089, 1090, 1091, 1089, 1091, 1090, ... 
+Resampling results:
+
+  RMSE    Rsquared    MAE     
+  8.0057  0.01562796  3.452416
+
+
+
+
+
+
+
+
+
+
+> ### Train data
+> set.seed(123)
+> subset13am <- subset(nhanes2, Age< 36 )
+> subset13ams4 <- na.omit(subset13am)
+>  
+>  
+> # Fit Generalized linear regression model using caret
+> modely <- train(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted")+
++                   WBC + Choline +Folate +Gender + BMI,
++                                    subset13ams4,
++                                     method = "glm",
++                                     trControl = trainControl(
++                                         method = "cv",
++                                         number = 10,
++                                         verboseIter = T ))
++ Fold01: parameter=none 
+- Fold01: parameter=none 
++ Fold02: parameter=none 
+- Fold02: parameter=none 
++ Fold03: parameter=none 
+- Fold03: parameter=none 
++ Fold04: parameter=none 
+- Fold04: parameter=none 
++ Fold05: parameter=none 
+- Fold05: parameter=none 
++ Fold06: parameter=none 
+- Fold06: parameter=none 
++ Fold07: parameter=none 
+- Fold07: parameter=none 
++ Fold08: parameter=none 
+- Fold08: parameter=none 
++ Fold09: parameter=none 
+- Fold09: parameter=none 
++ Fold10: parameter=none 
+- Fold10: parameter=none 
+Aggregating results
+Fitting final model on full training set
+> 
+> modely
+Generalized Linear Model 
+
+1211 samples
+   8 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 1089, 1090, 1091, 1089, 1091, 1090, ... 
+Resampling results:
+
+  RMSE    Rsquared    MAE     
+  8.0057  0.01562796  3.452416
+
+> 
+
+> modely1 <- train(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted") +
++                   WBC + Choline +Folate +Gender + BMI,
++                 subset13ams4,
++                 method = "glm",
++                 trControl = trainControl(
++                   method = "cv",
++                   number = 10,
++                   verboseIter = T ))
++ Fold01: parameter=none 
+- Fold01: parameter=none 
++ Fold02: parameter=none 
+- Fold02: parameter=none 
++ Fold03: parameter=none 
+- Fold03: parameter=none 
++ Fold04: parameter=none 
+- Fold04: parameter=none 
++ Fold05: parameter=none 
+- Fold05: parameter=none 
++ Fold06: parameter=none 
+- Fold06: parameter=none 
++ Fold07: parameter=none 
+- Fold07: parameter=none 
++ Fold08: parameter=none 
+- Fold08: parameter=none 
++ Fold09: parameter=none 
+- Fold09: parameter=none 
++ Fold10: parameter=none 
+- Fold10: parameter=none 
+Aggregating results
+Fitting final model on full training set
+> 
+> modely1
+Generalized Linear Model 
+
+1211 samples
+   7 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 1090, 1089, 1090, 1090, 1090, 1090, ... 
+Resampling results:
+
+  RMSE      Rsquared     MAE     
+  8.069963  0.008414136  3.453628
+
+
+> # Function for Root Mean Squared Error
+> RMSE <- function(error) { sqrt(mean(error^2)) }
+> RMSE(mo1$residuals)
+[1] 2.591557
+> 
+> 
+> # Function for Root Mean Squared Error
+> RMSE <- function(error) { sqrt(mean(error^2)) }
+> RMSE(moa$residuals)
+[1] 2.576178
+
+> ### Unadjusted ANalysis
+> mo1a <- svyglm(HSCRP ~ relevel(Zinc, ref = "Inadequate Intake")* relevel(Fasting, ref="Not Fasted"),
++                design = d2, family = gaussian(link='log'))
+> mo1a
+Stratified 1 - level Cluster Sampling design (with replacement)
+With (60) clusters.
+subset(nhc10, Age_R < 36)
+
+Call:  svyglm(formula = HSCRP ~ relevel(Zinc, ref = "Inadequate Intake") * 
+    relevel(Fasting, ref = "Not Fasted"), design = d2, family = gaussian(link = "log"))
+
+Coefficients:
+                                                                                       (Intercept)  
+                                                                                           1.04924  
+                                           relevel(Zinc, ref = "Inadequate Intake")Adequate Intake  
+                                                                                          -0.04499  
+                                                        relevel(Fasting, ref = "Not Fasted")Fasted  
+                                                                                           0.60805  
+relevel(Zinc, ref = "Inadequate Intake")Adequate Intake:relevel(Fasting, ref = "Not Fasted")Fasted  
+                                                                                          -0.52213  
+
+Degrees of Freedom: 1210 Total (i.e. Null);  27 Residual
+Null Deviance:	    50870 
+Residual Deviance: 50050 	AIC: 8606
+> 
+> ### Model Summary
+> z1aa <-  tbl_regression(mo1a,intercept= FALSE,add_estimate_to_reference_rows = TRUE
++                       , exponentiate = TRUE) %>%
++   remove_row_type(type = "header")  %>%
++   modify_caption("**Table 3: Analysis of the Coefficients of the  Participants** ")
+> z1aa
+> 
+> summary(mo1a)$aic
+[1] 8605.837
+> 
+> ### Merge Summary Tables
+> tbl_merge_ex1 <-
++   tbl_merge(
++     tbls = list(z1aa, z1),
++     tab_spanner = c("**Unadjusted Analysis**", "**Adjusted Analysis**"))
+> 
+> tbl_merge_ex1
+
+> ###########################################################################################################
+> ### Interaction Effect Figure 1 for above data
+> 
+> ### Use equation w/out relevel 
+> mo1ab <- svyglm(HSCRP ~ Zinc* Fasting +BMI +
++                       WBC + Choline +Folate+Gender,design = nhc10, family = gaussian(link='log'))
+> 
+> jk <- cat_plot(mo1ab, pred =Fasting, modx = Zinc, main.title = "Figure 1:Two-Way Interaction Effect Between Fasting & Dietary Zinc",
++               x.label =  "Fasting", interval = TRUE)
+> jk
+> 
+> jk<- jk+ scale_y_continuous(limits = c(0,10)) 
+> 
+> jk
+> 
+> j2 <- jk + annotate("text", x = 1.222, y = 9.3, label = "*", size = 6)
+> 
+> j2
+> 
+> ########################################################################
